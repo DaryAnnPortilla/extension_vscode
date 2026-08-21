@@ -1,0 +1,172 @@
+{
+  "name": "code-analyzer-extension",
+  "displayName": "Code Analyzer",
+  "description": "Analiza cambios en el código para detectar comportamientos abruptos en entornos educativos",
+  "version": "3.0.0",
+  "publisher": "extensionEVA",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Education",
+    "Linters",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:codeAnalyzer.startMonitoring",
+    "onCommand:codeAnalyzer.stopMonitoring",
+    "onCommand:codeAnalyzer.showScore",
+    "onCommand:codeAnalyzer.showDetailedReport",
+    "onCommand:codeAnalyzer.generateFinalReport",
+    "onCommand:codeAnalyzer.resetScores",
+    "onCommand:codeAnalyzer.showLog",
+    "onCommand:codeAnalyzer.verifyStatus"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeAnalyzer.startMonitoring",
+        "title": "Code Analyzer: Iniciar Monitoreo",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.stopMonitoring",
+        "title": "Code Analyzer: Detener Monitoreo",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.showScore",
+        "title": "Code Analyzer: Mostrar Puntuación",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.showDetailedReport",
+        "title": "Code Analyzer: Mostrar Reporte Detallado",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.generateFinalReport",
+        "title": "Code Analyzer: Generar Reporte Final",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.resetScores",
+        "title": "Code Analyzer: Reiniciar Puntuaciones",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.showLog",
+        "title": "Code Analyzer: Mostrar Log",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.verifyStatus",
+        "title": "Code Analyzer: Verificar Estado",
+        "category": "Code Analyzer"
+      }
+    ],
+    "configuration": {
+      "title": "Code Analyzer",
+      "properties": {
+        "codeAnalyzer.changeThreshold": {
+          "type": "number",
+          "default": 0.6,
+          "minimum": 0.1,
+          "maximum": 1,
+          "description": "Umbral de cambio para detectar modificaciones abruptas (0.1 - 1.0)"
+        },
+        "codeAnalyzer.timeThreshold": {
+          "type": "number",
+          "default": 1500,
+          "minimum": 100,
+          "maximum": 10000,
+          "description": "Tiempo mínimo entre cambios en milisegundos"
+        },
+        "codeAnalyzer.minCodeLength": {
+          "type": "number",
+          "default": 50,
+          "minimum": 10,
+          "maximum": 500,
+          "description": "Longitud mínima de código para considerar el archivo"
+        },
+        "codeAnalyzer.maxWarnings": {
+          "type": "number",
+          "default": 2,
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Número máximo de advertencias antes de penalizar"
+        },
+        "codeAnalyzer.penaltyAmount": {
+          "type": "number",
+          "default": 2,
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Puntos a restar por penalización"
+        },
+        "codeAnalyzer.maxPenalties": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Número máximo de penalizaciones permitidas"
+        },
+        "codeAnalyzer.maxScore": {
+          "type": "number",
+          "default": 10,
+          "minimum": 5,
+          "maximum": 100,
+          "description": "Puntuación máxima inicial"
+        },
+        "codeAnalyzer.initializationTime": {
+          "type": "number",
+          "default": 15000,
+          "minimum": 5000,
+          "maximum": 60000,
+          "description": "Tiempo de inicialización en milisegundos"
+        },
+        "codeAnalyzer.maxHistoryLength": {
+          "type": "number",
+          "default": 20,
+          "minimum": 5,
+          "maximum": 50,
+          "description": "Longitud máxima del historial de cambios"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "codeAnalyzer.showScore",
+        "key": "ctrl+shift+s",
+        "mac": "cmd+shift+s"
+      },
+      {
+        "command": "codeAnalyzer.verifyStatus",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
+    "@vscode/vsce": "^3.9.2",
+    "eslint": "^8.31.0",
+    "typescript": "^4.9.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/code-analyzer-extension.git"
+  },
+  "license": "MIT"
+}
