@@ -1,0 +1,31 @@
+# VS Code
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
+
+# TypeScript
+out/
+dist/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+code-analyzer-log.txt
+REPORTE_FINAL_*.txt
+VERIFICACION_MONITOREO.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Build
+*.vsix
+*.zip
