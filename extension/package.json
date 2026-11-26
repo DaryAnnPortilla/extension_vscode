@@ -2,7 +2,7 @@
   "name": "code-analyzer-extension",
   "displayName": "Code Analyzer",
   "description": "Analiza cambios en el código para detectar comportamientos abruptos en entornos educativos",
-  "version": "3.0.0",
+  "version": "3.2.0",
   "publisher": "tu-publisher",
   "engines": {
     "vscode": "^1.74.0"
@@ -18,72 +18,133 @@
     "onCommand:codeAnalyzer.showScore",
     "onCommand:codeAnalyzer.showDetailedReport",
     "onCommand:codeAnalyzer.generateFinalReport",
+    "onCommand:codeAnalyzer.generatePdfReport",
     "onCommand:codeAnalyzer.resetScores",
-    "onCommand:codeAnalyzer.showLog",
-    "onCommand:codeAnalyzer.verifyStatus"
+    "onCommand:codeAnalyzer.verifyStatus",
+    "onCommand:codeAnalyzer.deactivateExtension"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "codeAnalyzer.startMonitoring",
-        "title": "Code Analyzer: Iniciar Monitoreo",
+        "title": "Iniciar Monitoreo",
         "category": "Code Analyzer"
       },
       {
         "command": "codeAnalyzer.stopMonitoring",
-        "title": "Code Analyzer: Detener Monitoreo",
+        "title": "Detener Monitoreo",
         "category": "Code Analyzer"
       },
       {
         "command": "codeAnalyzer.showScore",
-        "title": "Code Analyzer: Mostrar Puntuación",
+        "title": "Mostrar Puntuación",
         "category": "Code Analyzer"
       },
       {
         "command": "codeAnalyzer.showDetailedReport",
-        "title": "Code Analyzer: Mostrar Reporte Detallado",
+        "title": "Mostrar Reporte Detallado",
         "category": "Code Analyzer"
       },
       {
         "command": "codeAnalyzer.generateFinalReport",
-        "title": "Code Analyzer: Generar Reporte Final",
-        "category": "Code Analyzer"
-      },
-      {
-        "command": "codeAnalyzer.resetScores",
-        "title": "Code Analyzer: Reiniciar Puntuaciones",
-        "category": "Code Analyzer"
-      },
-      {
-        "command": "codeAnalyzer.showLog",
-        "title": "Code Analyzer: Mostrar Log",
-        "category": "Code Analyzer"
-      },
-      {
-        "command": "codeAnalyzer.verifyStatus",
-        "title": "Code Analyzer: Verificar Estado",
+        "title": "Generar Reporte Final",
         "category": "Code Analyzer"
       },
       {
         "command": "codeAnalyzer.generatePdfReport",
-        "title": "Code Analyzer: Generar Reporte PDF"
+        "title": "Generar Reporte PDF",
+        "category": "Code Analyzer"
       },
-      
+      {
+        "command": "codeAnalyzer.resetScores",
+        "title": "Reiniciar Puntuaciones",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.verifyStatus",
+        "title": "Verificar Estado",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.deactivateExtension",
+        "title": "Desactivar Extensión",
+        "category": "Code Analyzer"
+      },
       {
         "command": "codeAnalyzer.interceptPaste",
-        "title": "Code Analyzer: Intercept Paste"
+        "title": "Intercept Paste",
+        "category": "Code Analyzer"
       },
-      { 
-        "command": "codeAnalyzer.interceptCopy", "title": "Code Analyzer: Intercept Copy" 
+      {
+        "command": "codeAnalyzer.interceptCopy",
+        "title": "Intercept Copy",
+        "category": "Code Analyzer"
       },
-      { 
-        "command": "codeAnalyzer.interceptCut", "title": "Code Analyzer: Intercept Cut" 
+      {
+        "command": "codeAnalyzer.interceptCut",
+        "title": "Intercept Cut",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.acceptSuggestionTab",
+        "title": "Accept Suggestion (Tab)",
+        "category": "Code Analyzer"
+      },
+      {
+        "command": "codeAnalyzer.acceptSuggestionEnter",
+        "title": "Accept Suggestion (Enter)",
+        "category": "Code Analyzer"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "codeAnalyzer.interceptPaste",
+          "when": "false"
+        },
+        {
+          "command": "codeAnalyzer.interceptCopy",
+          "when": "false"
+        },
+        {
+          "command": "codeAnalyzer.interceptCut",
+          "when": "false"
+        },
+        {
+          "command": "codeAnalyzer.acceptSuggestionTab",
+          "when": "false"
+        },
+        {
+          "command": "codeAnalyzer.acceptSuggestionEnter",
+          "when": "false"
+        }
+      ]
+    },
     "configuration": {
       "title": "Code Analyzer",
       "properties": {
+        "codeAnalyzer.maxScore": {
+          "type": "number",
+          "default": 10,
+          "minimum": 5,
+          "maximum": 100,
+          "description": "Puntuación máxima inicial"
+        },
+        "codeAnalyzer.penaltyAmount": {
+          "type": "number",
+          "default": 0.25,
+          "minimum": 0.05,
+          "maximum": 5,
+          "description": "Puntos a restar por penalización"
+        },
+        "codeAnalyzer.maxWarnings": {
+          "type": "number",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Número máximo de advertencias antes de penalizar"
+        },
         "codeAnalyzer.changeThreshold": {
           "type": "number",
           "default": 0.6,
@@ -105,40 +166,26 @@
           "maximum": 500,
           "description": "Longitud mínima de código para considerar el archivo"
         },
-        "codeAnalyzer.maxWarnings": {
+        "codeAnalyzer.minSuspiciousLength": {
           "type": "number",
-          "default": 2,
-          "minimum": 1,
-          "maximum": 5,
-          "description": "Número máximo de advertencias antes de penalizar"
+          "default": 40,
+          "minimum": 10,
+          "maximum": 300,
+          "description": "Cantidad mínima de caracteres insertados para evaluar sospecha"
         },
-        "codeAnalyzer.penaltyAmount": {
+        "codeAnalyzer.minAbruptPasteLength": {
           "type": "number",
-          "default": 0.5,
-          "minimum": 0.1,
-          "maximum": 5,
-          "description": "Puntos a restar por penalización"
-        },
-        "codeAnalyzer.maxPenalties": {
-          "type": "number",
-          "default": 20,
-          "minimum": 1,
-          "maximum": 20,
-          "description": "Número máximo de penalizaciones permitidas"
-        },
-        "codeAnalyzer.maxScore": {
-          "type": "number",
-          "default": 10,
-          "minimum": 5,
-          "maximum": 100,
-          "description": "Puntuación máxima inicial"
+          "default": 120,
+          "minimum": 40,
+          "maximum": 1000,
+          "description": "Longitud mínima para considerar una inserción como bloque grande"
         },
         "codeAnalyzer.initializationTime": {
           "type": "number",
           "default": 15000,
           "minimum": 5000,
           "maximum": 60000,
-          "description": "Tiempo de inicialización en milisegundos"
+          "description": "Tiempo de gracia inicial por archivo en milisegundos"
         },
         "codeAnalyzer.maxHistoryLength": {
           "type": "number",
@@ -170,7 +217,6 @@
         "key": "ctrl+shift+v",
         "mac": "cmd+shift+v"
       },
-
       {
         "command": "codeAnalyzer.interceptPaste",
         "key": "ctrl+v",
@@ -189,7 +235,6 @@
         "mac": "cmd+x",
         "when": "editorTextFocus"
       },
-
       {
         "command": "codeAnalyzer.acceptSuggestionTab",
         "key": "tab",
@@ -198,9 +243,8 @@
       {
         "command": "codeAnalyzer.acceptSuggestionEnter",
         "key": "enter",
-        "when": "editorTextFocus && suggestWidgetVisible && !suggestWidgetHasFocusedItem"
+        "when": "editorTextFocus && suggestWidgetVisible"
       }
-      
     ]
   },
   "scripts": {
